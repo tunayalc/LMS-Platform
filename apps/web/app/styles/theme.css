@@ -1,0 +1,174 @@
+/* Dark Mode CSS Variables */
+
+:root {
+    /* Light mode (default) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --bg-accent: #eff6ff;
+    
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --text-muted: #9ca3af;
+    
+    --border-primary: #e5e7eb;
+    --border-secondary: #d1d5db;
+    
+    --accent-primary: #3b82f6;
+    --accent-secondary: #60a5fa;
+    --accent-hover: #2563eb;
+    
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    
+    --hover-bg: rgba(0, 0, 0, 0.05);
+    --active-bg: rgba(0, 0, 0, 0.1);
+}
+
+:root.dark,
+[data-theme="dark"] {
+    /* Dark mode */
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --bg-accent: #1e3a5f;
+    
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --text-tertiary: #d1d5db;
+    --text-muted: #9ca3af;
+    
+    --border-primary: #374151;
+    --border-secondary: #4b5563;
+    
+    --accent-primary: #60a5fa;
+    --accent-secondary: #93c5fd;
+    --accent-hover: #3b82f6;
+    
+    --success: #34d399;
+    --warning: #fbbf24;
+    --error: #f87171;
+    --info: #60a5fa;
+    
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+    
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --active-bg: rgba(255, 255, 255, 0.1);
+}
+
+/* Base styles using variables */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Input styles */
+input, textarea, select {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-primary);
+    color: var(--text-primary);
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--accent-primary);
+}
+
+/* Card styles */
+.card {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-primary);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--accent-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-color: var(--border-primary);
+}
+
+/* Table styles */
+table {
+    border-color: var(--border-primary);
+}
+
+th {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+td {
+    border-color: var(--border-primary);
+}
+
+/* Modal styles */
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--bg-primary);
+    border-color: var(--border-primary);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Code blocks */
+pre, code {
+    background-color: var(--bg-tertiary);
+}
+
+[data-theme="dark"] pre,
+[data-theme="dark"] code {
+    background-color: #0f172a;
+}
+
+/* Links */
+a {
+    color: var(--accent-primary);
+}
+
+a:hover {
+    color: var(--accent-hover);
+}
+
+/* Selection */
+::selection {
+    background-color: var(--accent-primary);
+    color: white;
+}

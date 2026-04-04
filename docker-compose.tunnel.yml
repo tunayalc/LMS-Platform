@@ -1,0 +1,9 @@
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    restart: always
+    command: tunnel run
+    env_file:
+      - .env.tunnel
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

@@ -1,0 +1,11 @@
+node_modules
+.git
+.env.local
+.env.docker
+.env.*.example
+apps/*/node_modules
+apps/*/dist
+packages/*/dist
+services/*/.venv
+logs
+postman_environment_local.json

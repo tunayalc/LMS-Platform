@@ -1,0 +1,99 @@
+# Dependencies
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+
+# Environment files (SECRETS - NEVER COMMIT!)
+.env
+.env.*
+!.env.example
+*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+
+# Build outputs
+dist/
+build/
+out/
+.next/
+.expo/
+*.tsbuildinfo
+apps/desktop/release/
+apps/desktop/dist-electron/
+
+# Uploads & generated content
+apps/api/uploads/
+apps/mobile/.expo-export-test/
+
+# Secrets & credentials (CRITICAL!)
+SECRETS_BACKUP.txt
+*.pem
+*.key
+*.p12
+*.pfx
+google-services.json
+GoogleService-Info.plist
+postman_environment_*.json
+!postman_environment_*.example.json
+cloudflared*.exe
+*.seb
+
+# Images & media (large files)
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.mp4
+*.mov
+*.ico
+!apps/web/public/favicon.ico
+
+# Markdown (except README)
+*.md
+!README.md
+!*/README.md
+!docs/*.md
+
+# Batch files with tokens
+LMS_BASLAT*.bat
+*_BASLAT.bat
+
+# Test/temp files
+*.test.ts
+*.spec.ts
+coverage/
+.nyc_output/
+*.bak
+apps/web/tsc_output.txt
+apps/web/remaining_errors.txt
+
+# Mobile specific
+apps/mobile/android/
+apps/mobile/ios/
+apps/mobile/.expo/
+
+# Packages
+apps/*/node_modules/
+packages/*/node_modules/
+services/*/.venv/
+
+# Next.js build ??kt?lar?
+apps/web/.next/

@@ -1,0 +1,744 @@
+{
+  "info": {
+    "name": "LMS API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/health"
+      }
+    },
+    {
+      "name": "Version",
+      "request": {
+        "method": "GET",
+        "url": "{{apiBaseUrl}}/version"
+      }
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"admin\",\"password\":\"1234\"}"
+        },
+        "url": "{{apiBaseUrl}}/auth/login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.token) {",
+              "  pm.environment.set('token', json.token);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Bootstrap",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"admin\",\"password\":\"1234\",\"role\":\"SuperAdmin\"}"
+        },
+        "url": "{{apiBaseUrl}}/auth/bootstrap"
+      }
+    },
+    {
+      "name": "Users - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/users"
+      }
+    },
+    {
+      "name": "Users - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"demo.student\",\"password\":\"password\",\"role\":\"Student\"}"
+        },
+        "url": "{{apiBaseUrl}}/users"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.user && json.user.id) {",
+              "  pm.environment.set('userId', json.user.id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\":\"demo.student\",\"role\":\"Student\"}"
+        },
+        "url": "{{apiBaseUrl}}/users/{{userId}}"
+      }
+    },
+    {
+      "name": "Users - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/users/{{userId}}"
+      }
+    },
+    {
+      "name": "Courses - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/courses"
+      }
+    },
+    {
+      "name": "Courses - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Sample Course\",\"description\":\"Stub course\"}"
+        },
+        "url": "{{apiBaseUrl}}/courses"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.course && json.course.id) {",
+              "  pm.environment.set('courseId', json.course.id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/content"
+      }
+    },
+    {
+      "name": "Content - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"type\":\"video\",\"title\":\"Intro\",\"source\":\"placeholder\"}"
+        },
+        "url": "{{apiBaseUrl}}/content"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.content && json.content.id) {",
+              "  pm.environment.set('contentId', json.content.id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Intro Updated\"}"
+        },
+        "url": "{{apiBaseUrl}}/content/{{contentId}}"
+      }
+    },
+    {
+      "name": "Content - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/content/{{contentId}}"
+      }
+    },
+    {
+      "name": "Exams - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/exams"
+      }
+    },
+    {
+      "name": "Exams - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Midterm Exam\"}"
+        },
+        "url": "{{apiBaseUrl}}/exams"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.exam && json.exam.id) {",
+              "  pm.environment.set('examId', json.exam.id);",
+              "}"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Questions - List",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{apiBaseUrl}}/questions"
+      }
+    },
+    {
+      "name": "Questions - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"prompt\":\"What is 2+2?\",\"type\":\"multiple_choice\",\"options\":[\"2\",\"4\"],\"answer\":\"4\"}"
+        },
+        "url": "{{apiBaseUrl}}/questions"
+      }
+    },
+    {
+      "name": "Questions - Types",
+      "item": [
+        {
+          "name": "Questions - Type - Multiple Choice",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Basit MCQ soru?\",\"type\":\"multiple_choice\",\"examId\":\"{{examId}}\",\"options\":[\"A\",\"B\",\"C\",\"D\"],\"answer\":\"B\"}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Multiple Select",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Birden fazla sec?\",\"type\":\"multiple_select\",\"examId\":\"{{examId}}\",\"options\":[\"A\",\"B\",\"C\",\"D\"],\"answer\":[\"A\",\"C\"]}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - True False",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Dunya yuvarlaktir.\",\"type\":\"true_false\",\"examId\":\"{{examId}}\",\"answer\":\"Dogru\"}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Matching",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Eslestir.\",\"type\":\"matching\",\"examId\":\"{{examId}}\",\"meta\":{\"matchingPairs\":[{\"left\":\"1\",\"right\":\"Bir\"},{\"left\":\"2\",\"right\":\"Iki\"}]}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Ordering",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Kucukten buyuge sirala.\",\"type\":\"ordering\",\"examId\":\"{{examId}}\",\"meta\":{\"orderingItems\":[\"3\",\"1\",\"2\"]}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Fill Blank",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"___ bir dildir.\",\"type\":\"fill_blank\",\"examId\":\"{{examId}}\",\"meta\":{\"blankAnswers\":[[\"Turkce\",\"TURKCE\"]]}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Short Answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Turkiyenin baskenti?\",\"type\":\"short_answer\",\"examId\":\"{{examId}}\",\"meta\":{\"shortAnswers\":[\"Ankara\"]}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Long Answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Kisa bir aciklama yaz.\",\"type\":\"long_answer\",\"examId\":\"{{examId}}\",\"meta\":{\"longAnswerGuide\":\"En az 2-3 cumle.\"}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - File Upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"PDF odev yukle.\",\"type\":\"file_upload\",\"examId\":\"{{examId}}\",\"meta\":{\"fileUpload\":{\"allowedTypes\":[\"application/pdf\"],\"maxFiles\":1,\"maxSizeMb\":5}}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Calculation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"a + b hesapla.\",\"type\":\"calculation\",\"examId\":\"{{examId}}\",\"meta\":{\"calculation\":{\"formula\":\"a + b\",\"variables\":[{\"name\":\"a\",\"min\":1,\"max\":5,\"step\":1},{\"name\":\"b\",\"min\":2,\"max\":6,\"step\":1}]}}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Hotspot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Isaretli alani sec.\",\"type\":\"hotspot\",\"examId\":\"{{examId}}\",\"meta\":{\"hotspot\":{\"imageUrl\":\"https://example.com/image.png\",\"areas\":[{\"x\":10,\"y\":10,\"width\":100,\"height\":80}]}}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        },
+        {
+          "name": "Questions - Type - Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"prompt\":\"Toplama fonksiyonu yaz.\",\"type\":\"code\",\"examId\":\"{{examId}}\",\"meta\":{\"code\":{\"language\":\"javascript\",\"starter\":\"function sum(a,b){ return a+b; }\",\"tests\":[{\"input\":\"sum(1,2)\",\"output\":\"3\"}]}}}"
+            },
+            "url": "{{apiBaseUrl}}/questions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "item": [
+        {
+          "name": "Integrations - Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": "{{apiBaseUrl}}/integrations/status"
+          }
+        },
+        {
+          "name": "Integrations - SMTP Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"to\":\"demo@example.com\",\"subject\":\"Test\",\"message\":\"SMTP test\"}"
+            },
+            "url": "{{apiBaseUrl}}/integrations/smtp/test"
+          }
+        },
+        {
+          "name": "Integrations - SCORM Validate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"packageUrl\":\"https://example.com/scorm.zip\"}"
+            },
+            "url": "{{apiBaseUrl}}/integrations/scorm/validate"
+          }
+        },
+        {
+          "name": "Integrations - xAPI Statement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"statement\":{\"actor\":{\"name\":\"User\"},\"verb\":{\"id\":\"http://adlnet.gov/expapi/verbs/experienced\"},\"object\":{\"id\":\"https://example.com/content\"}}}"
+            },
+            "url": "{{apiBaseUrl}}/integrations/xapi/statement"
+          }
+        },
+        {
+          "name": "Integrations - LTI Launch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"launchUrl\":\"https://example.com/lti\"}"
+            },
+            "url": "{{apiBaseUrl}}/integrations/lti/launch"
+          }
+        },
+        {
+          "name": "Integrations - QTI Validate",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"packageUrl\":\"https://example.com/qti.zip\"}"
+            },
+            "url": "{{apiBaseUrl}}/integrations/qti/validate"
+          }
+        }
+      ]
+    }
+  ]
+}

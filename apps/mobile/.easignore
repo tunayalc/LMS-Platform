@@ -1,0 +1,38 @@
+# EAS Build Ignore File
+# Exclude files not needed for Android/iOS builds
+
+# Development dependencies
+*.md
+*.log
+.git
+.github
+.vscode
+.idea
+
+# Test files
+__tests__
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Documentation
+docs
+
+# Other apps (not needed for mobile build)
+# Note: We need packages/shared, so don't exclude that
+
+# Temp files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Large unnecessary files
+*.mp4
+*.mov
+*.avi
+
+# Build artifacts from other apps
+apps/web/.next
+apps/api/dist

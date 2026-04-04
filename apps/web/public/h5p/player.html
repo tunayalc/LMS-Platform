@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H5P Player</title>
+    <!-- jQuery is required by many H5P libraries and must be loaded first -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        // H5P libraries often expect H5P.jQuery to be available
+        window.H5P = window.H5P || {};
+        H5P.jQuery = window.jQuery;
+    </script>
+    <script src="/h5p/main.bundle.js"></script>
+    <link rel="stylesheet" href="/h5p/styles/h5p.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+        #h5p-container {
+            width: 100%;
+            min-height: 100vh;
+            /* Full viewport height */
+            padding: 20px;
+        }
+
+        /* Force iframe visibility and size */
+        #h5p-container iframe {
+            width: 100% !important;
+            min-height: 600px !important;
+            /* Minimum height ensures visibility */
+            border: none !important;
+            background: #ffffff;
+            display: block;
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #6b7280;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+            color: #dc2626;
+            text-align: center;
+            padding: 20px;
+            font-family: sans-serif;
+        }
+
+        .debug {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1f2937;
+            color: #10b981;
+            padding: 8px;
+            font-family: monospace;
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 9999;
+            border-top: 2px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="h5p-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 16px;">H5P içeriği yükleniyor...</p>
+        </div>
+    </div>
+    <div id="debug" class="debug"></div>
+
+    <script>
+        (function () {
+            const debugEl = document.getElementById('debug');
+            function log(msg) {
+                console.log('[H5P]', msg);
+                debugEl.innerHTML += msg + '<br>';
+                debugEl.scrollTop = debugEl.scrollHeight;
+            }
+
+            const params = new URLSearchParams(window.location.search);
+            const contentPath = params.get('path');
+
+            if (!contentPath) {
+                showError('İçerik yolu belirtilmedi.');
+                return;
+            }
+
+            log('Content path: ' + contentPath);
+
+            // Build URL - remove trailing slash
+            let h5pUrl = contentPath;
+            if (h5pUrl.endsWith('.json') || h5pUrl.endsWith('.html') || h5pUrl.endsWith('.h5p')) {
+                h5pUrl = h5pUrl.substring(0, h5pUrl.lastIndexOf('/'));
+            }
+            while (h5pUrl.endsWith('/')) {
+                h5pUrl = h5pUrl.slice(0, -1);
+            }
+            log('H5P URL: ' + h5pUrl);
+
+            if (typeof H5PStandalone === 'undefined') {
+                showError('H5PStandalone library not loaded');
+                return;
+            }
+            log('H5PStandalone loaded');
+            log('jQuery loaded: ' + (window.jQuery ? window.jQuery.fn.jquery : 'NO'));
+
+            // Global Error Handler
+            window.onerror = function (msg, url, line, col, error) {
+                alert("Global JS Error:\n" + msg + "\nLine: " + line);
+                return false;
+            };
+
+            try {
+                const container = document.getElementById('h5p-container');
+
+                const options = {
+                    h5pJsonPath: h5pUrl,
+                    frameJs: '/h5p/frame.bundle.js',
+                    frameCss: '/h5p/styles/h5p.css'
+                };
+
+                log('Initializing H5P...');
+
+                new H5PStandalone.H5P(container, options)
+                    .then(function () {
+                        log('SUCCESS: Content loaded!');
+
+                        // Force clean loading state
+                        const loader = document.getElementById('loading');
+                        if (loader) loader.style.display = 'none';
+
+                        // Check and force iframe size
+                        setTimeout(function () {
+                            var iframes = document.getElementsByTagName('iframe');
+                            log('Iframes found: ' + iframes.length);
+                            for (var i = 0; i < iframes.length; i++) {
+                                iframes[i].style.minHeight = '600px';
+                                iframes[i].style.height = '100%';
+                                iframes[i].style.display = 'block';
+                                log('Forced iframe size');
+                            }
+                        }, 500);
+
+                        // Auto-hide debug pane on success
+                        setTimeout(function () {
+                            debugEl.style.display = 'none';
+                        }, 3000);
+                    })
+                    .catch(function (err) {
+                        var errMsg = (err.message || err);
+                        if (err.stack) errMsg += '\n\n' + err.stack;
+                        alert('H5P INIT ERROR:\n' + errMsg);
+
+                        log('ERROR: ' + errMsg);
+                        showError('H5P Yükleme Hatası: ' + (err.message || err));
+                    });
+            } catch (err) {
+                showError('H5P Başlatma Hatası: ' + (err.message || err));
+                log('INIT CATCH: ' + (err.message || err));
+            }
+
+            function showError(message) {
+                document.getElementById('loading')?.remove();
+                const container = document.getElementById('h5p-container');
+                // Don't clear container if it has content (maybe partial load)
+                if (!container.innerHTML.includes('iframe')) {
+                    container.innerHTML = '';
+                }
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'error';
+                errorDiv.innerHTML =
+                    '<span style="font-size: 48px; margin-bottom: 16px;">❌</span>' +
+                    '<h3>' + message + '</h3>' +
+                    '<p style="color: #9ca3af; font-size: 12px; margin-top: 16px;">Path: ' + contentPath + '</p>';
+                container.appendChild(errorDiv);
+            }
+        })();
+    </script>
+</body>
+
+</html>

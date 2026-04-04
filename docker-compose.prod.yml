@@ -1,0 +1,89 @@
+services:
+  postgres:
+    image: postgres:16
+    env_file:
+      - .env.prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - lms_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    volumes:
+      - lms_redis_data:/data
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env.prod
+    environment:
+      MINIO_ROOT_USER: ${LMS_MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${LMS_MINIO_SECRET_KEY}
+    volumes:
+      - lms_minio_data:/data
+    restart: unless-stopped
+
+  minio-init:
+    image: minio/mc:latest
+    env_file:
+      - .env.prod
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "until /usr/bin/mc alias set lms http://minio:9000 $LMS_MINIO_ACCESS_KEY $LMS_MINIO_SECRET_KEY; do sleep 1; done;
+      /usr/bin/mc mb -p lms/$LMS_MINIO_BUCKET;
+      exit 0;"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.prod
+    env_file:
+      - .env.prod
+    environment:
+      LMS_ENV_FILE: /app/.env.prod
+    volumes:
+      - ./.env.prod:/app/.env.prod:ro
+    depends_on:
+      - postgres
+      - redis
+      - minio
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.prod
+    env_file:
+      - .env.prod
+    environment:
+      LMS_ENV_FILE: /app/.env.prod
+    volumes:
+      - ./.env.prod:/app/.env.prod:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:1.27-alpine
+    env_file:
+      - .env.prod
+    ports:
+      - "${LMS_NGINX_PORT}:80"
+    volumes:
+      - ./docker/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+    depends_on:
+      - api
+      - web
+    restart: unless-stopped
+
+volumes:
+  lms_pgdata:
+  lms_redis_data:
+  lms_minio_data:

@@ -1,0 +1,29 @@
+
+appId: com.lms.desktop
+productName: LMS Desktop
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist-electron/**/*
+  - dist/**/*
+win:
+  target: nsis
+  # Code signing is optional; provide CSC_LINK + CSC_KEY_PASSWORD in environment for signed builds.
+  verifyUpdateCodeSignature: false
+  signAndEditExecutable: false
+mac:
+  target: dmg
+  # identity: ${env.CSC_IDENTITY_AUTO_DISCOVERY}
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  icon: resources/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+publish:
+  provider: github
+  owner: ytuna
+  repo: lms-desktop

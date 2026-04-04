@@ -1,0 +1,127 @@
+    <SafeAreaView style={styles.container}>
+      <StatusBar style="dark" />
+      {/* Offline Banner */}
+      {isOffline && (
+        <View style={{ backgroundColor: '#ef4444', padding: 8, alignItems: 'center' }}>
+          <Text style={{ color: 'white', fontWeight: 'bold' }}>Offline Mod - İnternet Yok</Text>
+        </View>
+      )}
+
+      {/* Login View */}
+      {!isLoggedIn ? (
+        <View style={styles.centered}>
+          <View style={styles.card}>
+            <Text style={styles.title}>LMS Mobil</Text>
+            <Text style={styles.subtitle}>Giriş Yap</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Kullanıcı Adı"
+              autoCapitalize="none"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Şifre"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+            <Pressable style={styles.primaryButton} onPress={handleLogin} disabled={loading}>
+              {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.primaryText}>{t('login')}</Text>}
+            </Pressable>
+            {biometricAvailable && (
+              <Pressable style={styles.secondaryButton} onPress={handleBiometricLogin} disabled={loading}>
+                 <Text style={styles.secondaryText}>Biyometrik Giriş</Text>
+              </Pressable>
+            )}
+           </View>
+        </View>
+      ) : (
+        /* Logged In Dashboard */
+        <ScrollView contentContainerStyle={styles.scrollContent} ref={scrollRef}>
+          <View style={styles.card}>
+            <Text style={styles.title}>Hoş Geldin, {user?.username} 👋</Text>
+            <Text style={styles.subtitle}>Rol: {user?.role}</Text>
+            
+            <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'center' }}>
+                <Pressable style={styles.secondaryButton} onPress={handleRefresh}>
+                    <Text style={styles.secondaryText}>Yenile</Text>
+                </Pressable>
+                <Pressable style={styles.secondaryButton} onPress={handleLogout}>
+                    <Text style={styles.secondaryText}>Çıkış Yap</Text>
+                </Pressable>
+            </View>
+          </View>
+
+          {/* Mode Switcher / Breadcrumb */}
+          {viewMode !== 'list' && (
+            <Pressable onPress={() => {setViewMode('list'); setExamStarted(false);}} style={[styles.secondaryButton, {alignSelf: 'flex-start', marginBottom: 10}]}>
+               <Text>← Listeye Dön</Text>
+            </Pressable>
+          )}
+
+          {/* LIST MODE */}
+          {viewMode === 'list' && (
+            <View style={{ width: '100%' }}>
+               <View style={styles.card}>
+                  <Text style={styles.sectionTitle}>Sınavlar</Text>
+                  {exams.length === 0 ? <Text style={styles.helperText}>Sınav bulunamadı.</Text> : null}
+                  {exams.map(exam => (
+                     <Pressable key={exam.id} style={styles.listItem} onPress={() => {setSelectedExam(exam); setViewMode('detail');}}>
+                        <Text style={styles.listTitle}>{exam.title}</Text>
+                        <Text style={styles.listSubtitle}>{exam.durationMinutes ? `${exam.durationMinutes} dakika` : 'Süresiz'}</Text>
+                     </Pressable>
+                  ))}
+               </View>
+
+               <View style={styles.card}>
+                  <Text style={styles.sectionTitle}>Araçlar</Text>
+                  <Pressable style={styles.primaryButton} onPress={() => setShowCamera(true)}>
+                     <Text style={styles.primaryText}>📸 Hızlı OMR Tara</Text>
+                  </Pressable>
+                  <Pressable style={[styles.secondaryButton, {marginTop: 10}]} onPress={() => {
+                      // Trigger test notification
+                      NotificationManager.sendTestNotification().then(() => alert("Bildirim gönderildi!"));
+                  }}>
+                     <Text style={styles.secondaryText}>🔔 Bildirim Testi</Text>
+                  </Pressable>
+               </View>
+            </View>
+          )}
+
+          {/* DETAIL MODE */}
+          {viewMode === 'detail' && selectedExam && !examStarted && (
+            <View style={styles.card}>
+               <Text style={styles.title}>{selectedExam.title}</Text>
+               <Text style={styles.subtitle}>Süre: {selectedExam.durationMinutes} dk</Text>
+               <Text style={styles.helperText}>Geçme Notu: {selectedExam.passThreshold || 50}</Text>
+               
+               <Pressable style={styles.primaryButton} onPress={() => setExamStarted(true)}>
+                  <Text style={styles.primaryText}>Sınavı Başlat</Text>
+               </Pressable>
+            </View>
+          )}
+
+          {/* EXAM STARTED */}
+          {examStarted && selectedExam && (
+            <ExamTakingScreen
+               exam={selectedExam}
+               questions={questions.filter(q => q.examId === selectedExam.id)}
+               token={token || ''}
+               apiBase={apiBaseUrl}
+               onComplete={(score, total) => {
+                  Alert.alert("Sınav Tamamlandı", `Skorunuz: ${score}/${total}`);
+                  setExamStarted(false);
+                  setViewMode('list');
+               }}
+               onCancel={() => setExamStarted(false)}
+            />
+          )}
+
+        </ScrollView>
+      )}
+    </SafeAreaView>
+  );
+}

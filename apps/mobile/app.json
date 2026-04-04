@@ -1,0 +1,77 @@
+{
+  "expo": {
+    "name": "LMS Mobile",
+    "slug": "lms-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.lms.mobile",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.lms.mobile",
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Sınav gözetimi için kamera izni gerekiyor.",
+          "microphonePermission": "Sınav gözetimi için mikrofon izni gerekiyor."
+        }
+      ]
+    ],
+    "extra": {
+      "LMS_MODE": "local",
+      "LMS_API_PORT": "4000",
+      "LMS_WEB_PORT": "3000",
+      "LMS_OMR_PORT": "3002",
+      "LMS_API_NAME": "LMS API",
+      "LMS_API_VERSION": "0.1.0",
+      "LMS_AUTH_MODE": "local",
+      "LMS_API_BASE_URL_LOCAL": "http://192.168.133.49:4000",
+      "LMS_API_BASE_URL_LOCAL_ANDROID": "http://192.168.133.49:4000",
+      "LMS_API_BASE_URL_LOCAL_IOS": "http://192.168.133.49:4000",
+      "LMS_API_BASE_URL_TUNNEL": "https://api.lms.tunayalcin.site",
+      "LMS_WEB_BASE_URL": "http://localhost:3000",
+      "LMS_CORS_ORIGIN": "http://localhost:3000",
+      "LMS_OMR_BASE_URL_LOCAL": "http://localhost:3002",
+      "LMS_OMR_BASE_URL_LOCAL_ANDROID": "http://10.0.2.2:3002",
+      "LMS_OMR_BASE_URL_LOCAL_IOS": "http://localhost:3002",
+      "LMS_OMR_BASE_URL_TUNNEL": "https://lms.tunayalcin.site",
+      "LMS_ANDROID_RUNTIME": "device",
+      "LMS_ANDROID_GOOGLE_SERVICES": "false",
+      "LMS_RATE_LIMIT_WINDOW_MS": "60000",
+      "LMS_RATE_LIMIT_MAX": "120",
+      "LMS_DB_URL": "postgres://postgres:postgres@localhost:5432/lms",
+      "LMS_DB_MODE": "postgres",
+      "LMS_DB_SSL": "false",
+      "LMS_API_BASE_URL_DOCKER": "",
+      "LMS_OMR_BASE_URL_DOCKER": "",
+      "LMS_WEB_URL": "http://localhost:3000",
+      "eas": {
+        "projectId": "e673c846-bcb3-4c1b-ae28-bcacee1b5aa6"
+      }
+    },
+    "owner": "yramazan"
+  }
+}

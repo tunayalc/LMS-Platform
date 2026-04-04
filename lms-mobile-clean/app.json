@@ -1,0 +1,80 @@
+{
+  "expo": {
+    "name": "LMS Mobile",
+    "slug": "lms-mobile-clean",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lms.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.lms.mobile",
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "LMS_MODE": "local",
+      "LMS_API_PORT": "3001",
+      "LMS_WEB_PORT": "3000",
+      "LMS_OMR_PORT": "3002",
+      "LMS_API_NAME": "LMS API",
+      "LMS_API_VERSION": "0.1.0",
+      "LMS_AUTH_MODE": "mock",
+      "LMS_API_BASE_URL_LOCAL": "https://lms.tunayalcin.site",
+      "LMS_API_BASE_URL_LOCAL_ANDROID": "https://lms.tunayalcin.site",
+      "LMS_API_BASE_URL_LOCAL_IOS": "https://lms.tunayalcin.site",
+      "LMS_WEB_BASE_URL": "https://lms.tunayalcin.site",
+      "LMS_CORS_ORIGIN": "*",
+      "LMS_OMR_BASE_URL_LOCAL": "https://lms.tunayalcin.site",
+      "LMS_OMR_BASE_URL_LOCAL_ANDROID": "http://10.0.2.2:59141",
+      "LMS_OMR_BASE_URL_LOCAL_IOS": "http://192.168.1.4:59141",
+      "LMS_ANDROID_RUNTIME": "device",
+      "LMS_ANDROID_GOOGLE_SERVICES": "false",
+      "LMS_RATE_LIMIT_WINDOW_MS": "60000",
+      "LMS_RATE_LIMIT_MAX": "120",
+      "LMS_DB_URL": "postgres://postgres:password@localhost:5432/postgres",
+      "LMS_DB_MODE": "memory",
+      "LMS_DB_SSL": "false",
+      "LMS_API_BASE_URL_DOCKER": "",
+      "LMS_OMR_BASE_URL_DOCKER": "",
+      "eas": {
+        "projectId": "269551ec-216b-4d2c-a803-5a2392d6cb5e"
+      }
+    },
+    "owner": "tunayalc",
+    "plugins": [
+      "expo-localization",
+      "expo-secure-store",
+      "expo-dev-client",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Sınav gözetimi için kamera izni gerekiyor.",
+          "microphonePermission": "Sınav gözetimi için mikrofon izni gerekiyor."
+        }
+      ]
+    ]
+  }
+}

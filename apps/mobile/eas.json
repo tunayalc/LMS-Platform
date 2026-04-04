@@ -1,0 +1,38 @@
+{
+    "cli": {
+        "version": ">= 7.0.0",
+        "appVersionSource": "remote"
+    },
+    "build": {
+        "base": {
+            "node": "20.18.0",
+            "env": {
+                "LMS_ENV_FILE": ".env.local"
+            }
+        },
+        "development": {
+            "developmentClient": true,
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            },
+            "ios": {
+                "simulator": false
+            }
+        },
+        "preview": {
+            "distribution": "internal",
+            "android": {
+                "buildType": "apk"
+            }
+        },
+        "production": {
+            "android": {
+                "buildType": "app-bundle"
+            }
+        }
+    },
+    "submit": {
+        "production": {}
+    }
+}

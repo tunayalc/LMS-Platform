@@ -1,0 +1,82 @@
+services:
+  postgres:
+    image: postgres:16
+    env_file:
+      - .env.docker
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - lms_pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - "${LMS_REDIS_PORT}:6379"
+    volumes:
+      - lms_redis_data:/data
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    env_file:
+      - .env.docker
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "${LMS_MINIO_PORT}:9000"
+      - "${LMS_MINIO_CONSOLE_PORT}:9001"
+    volumes:
+      - lms_minio_data:/data
+
+  minio-init:
+    image: minio/mc:latest
+    env_file:
+      - .env.docker
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "until /usr/bin/mc alias set lms http://minio:9000 $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD; do sleep 1; done;
+      /usr/bin/mc mb -p lms/$LMS_MINIO_BUCKET;
+      exit 0;"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    env_file:
+      - .env.docker
+    environment:
+      LMS_ENV_FILE: /app/.env.docker
+    volumes:
+      - ./.env.docker:/app/.env.docker:ro
+    ports:
+      - "${LMS_API_PORT}:${LMS_API_PORT}"
+    depends_on:
+      - postgres
+      - redis
+      - minio
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    env_file:
+      - .env.docker
+    environment:
+      LMS_ENV_FILE: /app/.env.docker
+    volumes:
+      - ./.env.docker:/app/.env.docker:ro
+    ports:
+      - "${LMS_WEB_PORT}:${LMS_WEB_PORT}"
+    depends_on:
+      - api
+
+volumes:
+  lms_pgdata:
+  lms_redis_data:
+  lms_minio_data:

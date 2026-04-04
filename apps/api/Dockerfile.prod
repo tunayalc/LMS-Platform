@@ -1,0 +1,28 @@
+FROM node:20-slim AS build
+
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.26.0 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY apps ./apps
+COPY packages ./packages
+
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @lms/api build
+
+FROM node:20-slim
+
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.26.0 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY apps ./apps
+COPY packages ./packages
+COPY --from=build /app/apps/api/dist ./apps/api/dist
+
+RUN pnpm install --frozen-lockfile --prod
+
+ENV NODE_ENV=production
+ENV LMS_ENV_FILE=/app/.env.prod
+
+CMD ["pnpm", "--filter", "@lms/api", "start"]

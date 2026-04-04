@@ -1,0 +1,18 @@
+FROM node:20-slim
+
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@10.26.0 --activate
+
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+COPY apps ./apps
+COPY packages ./packages
+COPY .env.prod ./.env.prod
+
+RUN pnpm install --frozen-lockfile
+
+ENV NODE_ENV=production
+ENV LMS_ENV_FILE=/app/.env.prod
+
+RUN pnpm --filter @lms/web build
+
+CMD ["pnpm", "--filter", "@lms/web", "start"]

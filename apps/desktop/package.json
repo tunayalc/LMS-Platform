@@ -1,0 +1,33 @@
+{
+    "name": "@lms/desktop",
+    "version": "0.1.0",
+    "main": "dist-electron/main.js",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "package": "pnpm build && electron-builder",
+        "preview": "vite preview",
+        "type-check": "tsc"
+    },
+    "dependencies": {
+        "@lms/shared": "workspace:*",
+        "clsx": "^2.1.0",
+        "electron-store": "^8.1.0",
+        "electron-updater": "^6.6.2",
+        "jwt-decode": "^4.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "tailwind-merge": "^2.2.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.66",
+        "@types/react-dom": "^18.2.22",
+        "@vitejs/plugin-react": "^4.2.1",
+        "electron": "30.5.1",
+        "electron-builder": "^24.13.3",
+        "typescript": "^5.2.2",
+        "vite": "^5.2.0",
+        "vite-plugin-electron": "^0.28.4",
+        "vite-plugin-electron-renderer": "^0.14.5"
+    }
+}
